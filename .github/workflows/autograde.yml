@@ -1,0 +1,64 @@
+name: autograde
+
+# End-to-end check on every student push / PR:
+#   1. install deps with uv (Python 3.11)
+#   2. run the test suite (uv run pytest)
+#   3. run the bot in OFFLINE sim mode using the delta-hedged baseline
+#   4. score that run and assert a valid score.json was produced
+#
+# Everything runs offline (sim mode) with NO secrets and NO network, so a
+# correct student fork stays green without any Deribit keys.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+# Force sim mode regardless of any repo-level defaults; never touch the network.
+env:
+  BOT_MODE: sim
+
+jobs:
+  autograde:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python 3.11
+        run: uv python install 3.11
+
+      - name: Sync dependencies
+        run: uv sync --python 3.11
+
+      # Sanity: the YAML/JSON config files must parse before we rely on them.
+      - name: Validate config files parse
+        run: uv run python -c "import yaml, json; yaml.safe_load(open('config.example.yaml')); json.load(open('.github/classroom/autograding.json')); print('config files parse OK')"
+
+      - name: Run tests
+        run: uv run pytest
+
+      # Run the bot end-to-end in sim with the 'delta_hedged_vol_seller' baseline.
+      # Write to a dedicated CI journal dir so we never clobber runs/latest.
+      - name: Run sim (delta-hedged baseline)
+        run: |
+          uv run python -m botkit.runner \
+            --config config.example.yaml \
+            --mode sim \
+            --journal-dir runs/ci \
+            --strategy strategies.baselines.delta_hedged_vol_seller:DeltaHedgedVolSeller \
+            --risk     strategies.baselines.delta_hedged_vol_seller:HedgedRisk
+
+      - name: Score the run
+        run: uv run python score.py runs/ci
+
+      # Assert score.py produced a structurally valid score.json for that run.
+      - name: Assert valid score.json
+        run: uv run python ci/assert_score.py runs/ci/score.json

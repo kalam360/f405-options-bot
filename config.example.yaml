@@ -1,0 +1,27 @@
+# Example run configuration for the F405 options bot.
+# Copy/edit this file and pass it with --config. Secrets NEVER go here — API
+# keys come only from the environment (.env). See .env.example.
+
+mode: sim                       # "sim" = offline replay (default), "live" = Deribit testnet
+currency: BTC
+expiry_selector: front_weekly   # trade the expiry nearest ~7 days
+tick_seconds: 3600              # how often the loop polls a chain (1h ticks in sim)
+start_equity_btc: 1.0           # sim starting balance, in BTC
+journal_dir: runs/latest        # where trades.csv / equity.csv / meta.json land
+
+# --- sim-mode (offline) data source --------------------------------------
+sim_snapshot: data/deribit_snapshot.json   # captured chain to replay
+sim_days: 7.0                   # length of the synthetic GBM path, in days
+sim_seed: 0                     # change the seed for a different deterministic path
+
+# --- risk limits (the RiskManager reads these defaults) ------------------
+# These are intentionally LOOSE — tightening them is part of the assignment.
+risk:
+  max_net_delta: 5.0
+  max_net_vega_usd: 50000.0
+  max_gross_contracts: 50.0
+  max_contracts_per_instrument: 20.0
+  max_margin_util: 0.5
+  kill_switch_drawdown_pct: 0.30
+
+# Live mode always uses the Deribit TESTNET; base_url is fixed in code.

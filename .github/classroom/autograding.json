@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "Unit tests (pytest)",
+      "setup": "uv sync --python 3.11",
+      "run": "uv run pytest -q",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 6
+    },
+    {
+      "name": "Bot runs in sim and produces a valid score.json",
+      "setup": "",
+      "run": "uv run python -m botkit.runner --config config.example.yaml --mode sim --journal-dir runs/ci --strategy strategies.baselines.delta_hedged_vol_seller:DeltaHedgedVolSeller --risk strategies.baselines.delta_hedged_vol_seller:HedgedRisk && uv run python score.py runs/ci && uv run python -c \"import json; d=json.load(open('runs/ci/score.json')); req=['total_return','max_drawdown','sharpe','risk_adjusted','blew_up','score_0_3']; assert all(k in d for k in req), 'missing keys'; assert isinstance(d['blew_up'], bool); assert 0 <= d['score_0_3'] <= 3; print('SMOKE_OK score_0_3=' + str(d['score_0_3']))\"",
+      "input": "",
+      "output": "SMOKE_OK",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 4
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+:root {
+  --bg: #0b0e14;
+  --panel: #131822;
+  --line: #232a38;
+  --text: #e6e9ef;
+  --muted: #8b94a7;
+  --green: #22c55e;
+  --red: #ef4444;
+  --gold: #f5c451;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
+    Arial, sans-serif;
+}
+
+.wrap {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+header h1 {
+  margin: 0 0 4px;
+  font-size: 26px;
+  letter-spacing: -0.01em;
+}
+
+header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.note {
+  margin: 16px 0 24px;
+  padding: 12px 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th,
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+  white-space: nowrap;
+}
+
+th:nth-child(1),
+th:nth-child(2),
+td:nth-child(1),
+td:nth-child(2) {
+  text-align: left;
+}
+
+th {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+tbody tr.blewup {
+  opacity: 0.55;
+}
+
+.rank {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rank.top {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.name {
+  font-weight: 600;
+}
+
+.team {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.pos {
+  color: var(--green);
+}
+
+.neg {
+  color: var(--red);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.skull {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border: 1px solid var(--red);
+  border-radius: 999px;
+  color: var(--red);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+}
+
+.ra {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+footer {
+  margin-top: 28px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.empty {
+  margin-top: 40px;
+  padding: 40px;
+  text-align: center;
+  color: var(--muted);
+  background: var(--panel);
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+}

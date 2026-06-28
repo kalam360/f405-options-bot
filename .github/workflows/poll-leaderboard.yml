@@ -1,0 +1,36 @@
+name: poll-leaderboard
+
+# Polls every registered student's Deribit testnet account (read-only key),
+# computes their risk-adjusted score, and upserts it into Turso. Runs every
+# 15 minutes; can also be triggered by hand from the Actions tab.
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # every 15 minutes (UTC)
+  workflow_dispatch: {}        # manual "Run workflow" button
+
+# Don't pile up overlapping runs if one is slow.
+concurrency:
+  group: poll-leaderboard
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Poll Deribit and update the leaderboard
+        env:
+          # --- Turso (set these as repo secrets) ---
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          # --- Roster + read-only Deribit keys ---
+          # Easiest: store the WHOLE roster (with read-only keys inline) as one
+          # secret named ROSTER_JSON. Read-only keys cannot trade, so this is safe.
+          ROSTER_JSON: ${{ secrets.ROSTER_JSON }}
+        run: |
+          uv run --with httpx python leaderboard/poller/poll.py

@@ -18,4 +18,14 @@ __all__ = [
     "OptionQuote", "Chain", "Order", "Fill", "PositionLeg", "Greeks", "AccountState",
     "Strategy", "RiskManager", "RiskLimits", "Config",
     "bs_price", "greeks", "implied_vol", "d1d2",
+    "run",
 ]
+
+
+def __getattr__(name):
+    # Lazy export so `python -m botkit.runner` doesn't import the runner twice
+    # (which triggers a harmless-but-noisy RuntimeWarning from runpy).
+    if name == "run":
+        from .runner import run
+        return run
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

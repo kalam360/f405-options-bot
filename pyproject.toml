@@ -20,6 +20,7 @@ build-backend = "uv_build"
 
 [tool.uv.build-backend]
 module-root = ""
+module-name = "botkit"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "ada-lovelace",
+    "name": "Ada Lovelace",
+    "github": "ada-lovelace",
+    "team": "Section A",
+    "start_equity_usd": 100000,
+    "client_id_env": "DERIBIT_RO_ADA_ID",
+    "client_secret_env": "DERIBIT_RO_ADA_SECRET"
+  },
+  {
+    "id": "alan-turing",
+    "name": "Alan Turing",
+    "github": "alan-turing",
+    "team": "Section A",
+    "start_equity_usd": 100000,
+    "client_id": "PASTE_READONLY_CLIENT_ID_HERE",
+    "client_secret": "PASTE_READONLY_CLIENT_SECRET_HERE"
+  }
+]
