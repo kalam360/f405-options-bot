@@ -1,0 +1,20 @@
+# python / uv
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# secrets — NEVER commit your keys
+.env
+*.key
+
+# run output (your own trade logs stay local until you submit)
+runs/
+!runs/.gitkeep
+
+# node / next (leaderboard)
+node_modules/
+leaderboard/web/.next/
+leaderboard/web/out/
+.vercel
