@@ -6,8 +6,9 @@
 > is part of the deliverable.
 
 You are helping a student build an **autonomous BTC weekly-options paper-trading bot** on
-**Deribit testnet** for the IBA F405 course. Read `docs/ASSIGNMENT.md` and `CONTRACT.md` for
-the full spec before changing code.
+**Deribit testnet** for the IBA F405 course. Read `docs/ASSIGNMENT.md` first, then the
+well-commented framework interfaces in `botkit/` (`types.py`, `strategy.py`, `risk.py`) — they
+are the full spec for what you implement.
 
 ## What the student implements (and all you should touch)
 

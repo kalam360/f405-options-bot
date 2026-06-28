@@ -9,7 +9,8 @@ the deliverable.
 ## The task
 
 Help build an **autonomous BTC weekly-options paper-trading bot** on **Deribit testnet** for
-IBA F405. Read `docs/ASSIGNMENT.md` and `CONTRACT.md` first.
+IBA F405. Read `docs/ASSIGNMENT.md` first, then the well-commented framework interfaces in
+`botkit/` (`types.py`, `strategy.py`, `risk.py`) — those define exactly what you implement.
 
 ## Scope — implement only two classes
 

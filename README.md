@@ -10,6 +10,9 @@ first big Friday move. That understanding is the graded skill.
 
 > New here? Read **[docs/ASSIGNMENT.md](docs/ASSIGNMENT.md)** for the full brief and
 > **[docs/RUBRIC.md](docs/RUBRIC.md)** for exactly how you are graded.
+>
+> 📊 **Live class leaderboard:** https://f405-leaderboard-abul-kalam-faruks-projects.vercel.app
+> — once you register your read-only testnet key, your bot's risk-adjusted rank shows up here.
 
 ---
 

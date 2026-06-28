@@ -4,9 +4,9 @@ This is the step-by-step for **the instructor** to stand up the assignment on Gi
 Classroom using this repo as the template. Students fork it into private per-student repos,
 push code, and get autograded on every push. You only do this once per term.
 
-> **Prerequisite (done by the orchestrator, not you):** this repo must be marked a **template
-> repository** on GitHub (Settings → General → check *Template repository*), and the Turso DB
-> + GitHub Actions secrets for the leaderboard must already be provisioned. If the template
+> **Already configured for this repo:** it is marked a **template repository** on GitHub
+> (Settings → General → *Template repository*), and the Turso DB + GitHub Actions secrets for
+> the leaderboard are provisioned and live — so you can skip those. If the template
 > checkbox is not set, Classroom cannot use it as the starter and the *Use this template*
 > path will be missing.
 
@@ -104,11 +104,11 @@ their roster entry, so the leaderboard rank and the Classroom grade line up.
 
 ## 7. Sanity checklist before you invite students
 
-- [ ] Repo is marked a **template** (orchestrator).
-- [ ] Turso DB + GH Actions secrets provisioned for the leaderboard (orchestrator).
+- [x] Repo is marked a **template** (already done).
+- [x] Turso DB + GH Actions secrets provisioned for the leaderboard (already done).
 - [ ] Assignment created from `kalam360/f405-options-bot`, **private**, individual.
 - [ ] [`ASSIGNMENT_BLURB.md`](ASSIGNMENT_BLURB.md) pasted into the description.
 - [ ] Both autograding tests imported (6 + 4 = 10) and the Ubuntu runner selected.
 - [ ] Roster uploaded; invitation link tested with a throwaway account (repo is created,
       `uv run pytest` is green, the sim smoke test prints `SMOKE_OK`).
-- [ ] Leaderboard is live and updating (see `leaderboard/README.md`).
+- [x] Leaderboard is **live**: https://f405-leaderboard-abul-kalam-faruks-projects.vercel.app (see `leaderboard/README.md`).
