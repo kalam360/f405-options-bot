@@ -338,17 +338,31 @@ def poll_once() -> int:
     dex = Deribit()
     now_ms = int(time.time() * 1000)
     ok = 0
+    failed = 0
 
     try:
-        index = dex.index_price("BTC")
+        # The BTC index is shared by every student (USD conversion). If even this
+        # public read fails the run can't price anything, so bail cleanly.
+        try:
+            index = dex.index_price("BTC")
+        except Exception as exc:
+            print(f"ERROR: could not fetch BTC index, aborting poll: "
+                  f"{type(exc).__name__}: {exc}", file=sys.stderr)
+            return 0
         print(f"BTC index = {index:,.2f} USD")
+
         for s in roster:
+            # Each student is fully isolated: a bad/expired/auth-failing key, a
+            # network blip, or a Turso hiccup for ONE student is logged and
+            # skipped — it must never abort the poll for everyone else.
             try:
                 upsert_student(db, s, now_ms)
                 if not (s.client_id and s.client_secret):
                     print(f"  - {s.id}: no key yet, skipping balance fetch")
                     continue
 
+                # Auth + balance read are the parts most likely to fail (revoked
+                # key, wrong scope, testnet down). Keep them in the guarded block.
                 tok = dex.auth(s.client_id, s.client_secret)
                 summary = dex.account_summary(tok, "BTC")
                 equity_btc = float(summary.get("equity", 0.0))
@@ -366,12 +380,15 @@ def poll_once() -> int:
                       f"RA {sc.risk_adjusted:+.2f}{flag}")
                 ok += 1
             except Exception as exc:  # one bad key shouldn't sink the whole run
-                print(f"  - {s.id}: ERROR {exc}", file=sys.stderr)
+                failed += 1
+                print(f"  - {s.id}: SKIPPED ({type(exc).__name__}: {exc})",
+                      file=sys.stderr)
+                continue
     finally:
         dex.close()
         db.close()
 
-    print(f"Polled {ok}/{len(roster)} students OK.")
+    print(f"Polled {ok}/{len(roster)} students OK ({failed} skipped).")
     return ok
 
 

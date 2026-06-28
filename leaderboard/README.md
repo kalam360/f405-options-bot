@@ -89,15 +89,52 @@ secret. The committed `roster.json` is git-ignored regardless.
 
 ### 3. Add GitHub repo secrets (Settings → Secrets and variables → Actions)
 
-| Secret | Value |
-| --- | --- |
-| `TURSO_DATABASE_URL` | from `turso db show --url` |
-| `TURSO_AUTH_TOKEN` | from `turso db tokens create` |
-| `ROSTER_JSON` | the whole roster array from step 2 (read-only keys inline) |
+These are the **exact** secret names the cron workflow
+(`.github/workflows/poll-leaderboard.yml`) reads — they must match character for
+character:
 
-The workflow `.github/workflows/poll-leaderboard.yml` already runs every 15 minutes
-and on the **Run workflow** button. Trigger it once manually to confirm it polls
-and writes rows.
+| Secret | Required? | Value |
+| --- | --- | --- |
+| `TURSO_DATABASE_URL` | **yes** | from `turso db show --url` (the `libsql://…` URL) |
+| `TURSO_AUTH_TOKEN` | **yes** | from `turso db tokens create` |
+| `ROSTER_JSON` | **yes** | the whole roster array from step 2 (read-only keys inline) |
+
+**Deribit index source — no secret needed.** The poller reads the BTC index from
+Deribit testnet's **public** endpoint (`public/get_index_price` on
+`https://test.deribit.com`, hard-coded in `poll.py`). It needs no API key and no
+secret — only each student's *read-only* account key, which is carried inside
+`ROSTER_JSON` above. So those three secrets are the complete set.
+
+The workflow already runs every 15 minutes and on the **Run workflow** button.
+Trigger it once manually to confirm it polls and writes rows. If a single
+student's key is bad or expired, the poller logs `SKIPPED` for that student and
+keeps going — one bad key never aborts the whole run.
+
+### 3b. (Optional) Seed demo data before real students register
+
+So the leaderboard isn't empty during a demo or dry-run, seed three synthetic
+students (a steady survivor, a higher-return-but-higher-drawdown survivor, and one
+that blows up). It reuses `poll.py`'s Turso client and scoring, and is idempotent
+(it clears `demo-*` rows first, and only ever touches `demo-*` rows):
+
+```bash
+export TURSO_DATABASE_URL=libsql://...
+export TURSO_AUTH_TOKEN=...
+uv run --with httpx python leaderboard/poller/seed_demo.py
+```
+
+Re-run any time; delete the demo rows later with
+`DELETE FROM scores/equity_snapshots/students WHERE … LIKE 'demo-%'` (children
+first) or just leave them — real student rows rank alongside them.
+
+### Deploy order (summary)
+
+1. Create the Turso DB + load `schema.sql` (step 1).
+2. Build the roster with read-only keys (step 2).
+3. Add the three GitHub secrets above (step 3).
+4. *(optional)* Seed demo data (step 3b).
+5. Deploy the web app to Vercel with the same two Turso env vars (step 4).
+6. Trigger the workflow once to confirm rows land (step 5).
 
 ### 4. Deploy the web app to Vercel (free)
 
